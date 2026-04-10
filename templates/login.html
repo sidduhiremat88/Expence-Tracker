@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login | XpenseFlow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap (for basic utilities only) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root{
+            --bg: radial-gradient(circle at top left,#111827 0,#020617 45%,#020617 100%);
+            --card: rgba(15,23,42,0.96);
+            --border: rgba(148,163,184,0.6);
+            --text: #e5e7eb;
+            --muted:#9ca3af;
+            --accent:#4f46e5;
+            --accent-soft:rgba(79,70,229,0.16);
+            --radius-lg:18px;
+            --radius-pill:999px;
+            --shadow-soft:0 22px 52px rgba(15,23,42,0.9);
+        }
+
+        body {
+            font-family: system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            margin: 0;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            -webkit-font-smoothing: antialiased;
+            transition: background .3s,color .3s;
+        }
+
+        body:not(.dark){
+            --bg: radial-gradient(circle at top left,#e5e7eb 0,#f9fafb 45%,#e5e7eb 100%);
+            --card: rgba(255,255,255,0.96);
+            --border: rgba(15,23,42,0.08);
+            --text:#0f172a;
+            --muted:#6b7280;
+            --accent:#4f46e5;
+            --accent-soft:rgba(79,70,229,0.12);
+            --shadow-soft:0 18px 40px rgba(15,23,42,0.16);
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 380px;
+            background: var(--card);
+            padding: 26px 22px 22px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(18px) saturate(160%);
+            -webkit-backdrop-filter: blur(18px) saturate(160%);
+        }
+
+        .auth-header{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            margin-bottom:18px;
+            text-align:center;
+        }
+
+        .brand-pill{
+            display:inline-flex;
+            align-items:center;
+            gap:.4rem;
+            padding:6px 12px;
+            border-radius:999px;
+            border:1px solid rgba(148,163,184,0.55);
+            font-size:.75rem;
+            letter-spacing:.18em;
+            text-transform:uppercase;
+            margin-bottom:10px;
+        }
+
+        h2 {
+            margin:0 0 4px;
+            font-size:1.2rem;
+        }
+
+        .auth-subtitle{
+            font-size:.86rem;
+            color:var(--muted);
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 11px;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(148,163,184,0.55);
+            background: rgba(15,23,42,0.82);
+            color: var(--text);
+        }
+
+        body:not(.dark) input[type="text"],
+        body:not(.dark) input[type="password"]{
+            background:#f9fafb;
+            border-color:rgba(15,23,42,0.12);
+        }
+
+        input::placeholder{
+            color:#9ca3af;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 0.9rem;
+            background: var(--accent);
+            color: #f9fafb;
+            border: none;
+            border-radius: var(--radius-pill);
+            margin-top: 4px;
+            font-weight:500;
+            box-shadow:0 14px 32px rgba(79,70,229,0.5);
+            transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+        }
+
+        button[type="submit"]:hover{
+            transform:translateY(-2px);
+            filter:brightness(1.04);
+            box-shadow:0 18px 40px rgba(79,70,229,0.65);
+        }
+
+        .show-password {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            margin: -4px 0 14px 2px;
+            color: var(--muted);
+        }
+
+        .show-password input {
+            width: auto;
+            margin: 0;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 14px;
+            font-size:0.86rem;
+        }
+
+        a:hover{
+            text-decoration:underline;
+        }
+
+        .error {
+            color: #fecaca;
+            background: rgba(239,68,68,0.14);
+            border-radius: 999px;
+            padding: 6px 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 0.8rem;
+            border:1px solid rgba(248,113,113,0.7);
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+        }
+    </style>
+
+    <script>
+        function togglePwd() {
+            const p = document.getElementById("pwd");
+            p.type = p.type === "password" ? "text" : "password";
+        }
+
+        /* Dark mode sync with app */
+        (function(){
+            const saved = localStorage.getItem("darkMode");
+            if (saved === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+    </script>
+</head>
+
+<body>
+<div class="auth-card" role="main">
+    <div class="auth-header">
+        <div class="brand-pill">
+            <span aria-hidden="true">💰</span>
+            <span>XPENSEFLOW</span>
+        </div>
+        <h2>Welcome back</h2>
+        <p class="auth-subtitle">Sign in to track and analyze your spending.</p>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+    {% for m in messages %}
+        <div class="error" role="alert">{{ m }}</div>
+    {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <label class="visually-hidden" for="username">Username</label>
+        <input id="username" type="text" name="username" placeholder="Username" required>
+
+        <label class="visually-hidden" for="pwd">Password</label>
+        <input id="pwd" type="password" name="password" placeholder="Password" required>
+
+        <div class="show-password">
+            <input id="showPwd" type="checkbox" onclick="togglePwd()">
+            <label for="showPwd">Show password</label>
+        </div>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <a href="/signup">Create account</a>
+</div>
+</body>
+</html>
